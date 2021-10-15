@@ -6,14 +6,14 @@ public class Employee {
     public String employeeName, birthDate, employeeDepartment, employeePosition;
     public Double employeeBasicSalary, employeeCommuterAllowance;
     public int employeeId;
+    public boolean isIn;
 
     public ArrayList<Employee> employeeArrayList = new ArrayList<>();
-
+    public ArrayList<Integer> employeeIds = new ArrayList<>();
 
     public Employee() {
 
     }
-
 
     public Employee(String employeeName, String birthDate, String employeeDepartment, String employeePosition, Double employeeBasicSalary, Double employeeCommuterAllowance, int employeeId) {
         this.employeeName = employeeName;
@@ -24,40 +24,6 @@ public class Employee {
         this.employeeCommuterAllowance = employeeCommuterAllowance;
         this.employeeId = employeeId;
     }
-
-    //main method
-    public static void main(String[] args) {
-        String choice = null;
-        do {
-            System.out.println("What would you like to do?\n1. Add Employee\n2. Change Employee Department\n3. Promote Employee\n4. Quit");
-            int empChoice = new Scanner(System.in).nextInt();
-            switch (empChoice) {
-                case 1:
-                    new Employee().addEmployee();
-                    break;
-                case 2:
-                    new Employee().shiftDepartment();
-                    break;
-                case 3:
-                    new Employee().promoteEmployee();
-                    break;
-                case 4:
-                    if (new Employee().employeeArrayList.isEmpty()) {
-                        System.out.println("No employees found");
-                    } else {
-                        System.out.println(new Employee().employeeArrayList.get(0).employeeName);
-                    }
-                    //choice = new Scanner(System.in).next();
-                    break;
-                default:
-                    System.out.println("Invalid Choice");
-                    break;
-            }
-            System.out.println("Exit?\n1. Y\n2. n");
-            choice = new Scanner(System.in).next();
-        } while (choice.equals("n"));
-    }
-
 
     //a function to add users to the database
     public void addEmployee() {
@@ -87,61 +53,101 @@ public class Employee {
         employee.employeePosition = employeePosition;
         employee.employeeBasicSalary = employeeBasicSalary;
         employee.employeeCommuterAllowance = employeeCommuterAllowance;
-        employeeArrayList.add(employeeId, employee);
-        System.out.println(String.valueOf(employee.employeeId).concat(" ").concat(employee.employeeName));
+        employeeArrayList.add(employee);
+        employeeIds.add(employee.employeeId);
+        System.out.println("-----Added The Following Employee-----\n ".concat(String.valueOf(employee.employeeId).concat(" ").concat(employee.employeeName).concat(" ").concat(employee.employeeDepartment)));
     }
 
     //Calculate an employee's gross salary
-    private void calculateSalary(Employee employee) {
+    protected void calculateSalary() {
         System.out.println("Enter the employee's ID whose salary you want to calculate");
         Scanner s = new Scanner(System.in);
-        int empIndex = s.nextInt();
-        double empCommuterAllowance = employeeArrayList.get(empIndex).employeeCommuterAllowance;
-        double empBasicSalary = employeeArrayList.get(empIndex).employeeBasicSalary;
+        int empId = s.nextInt();
+        double empCommuterAllowance = employeeArrayList.get(empId).employeeCommuterAllowance;
+        double empBasicSalary = employeeArrayList.get(empId).employeeBasicSalary;
         System.out.println(empCommuterAllowance + empBasicSalary);
     }
 
-    private void shiftDepartment() {
+    protected void shiftDepartment() {
         System.out.println("Enter the employee's ID whose department you want to change");
         Scanner s = new Scanner(System.in);
-        int empIndex = s.nextInt();
-        System.out.println("Enter the employee's new department");
-        String newDepartment = s.next();
-        String employeeName = employeeArrayList.get(empIndex).employeeName;
-        String birthDate = employeeArrayList.get(empIndex).birthDate;
-        double empCommuterAllowance = employeeArrayList.get(empIndex).employeeCommuterAllowance;
-        double empBasicSalary = employeeArrayList.get(empIndex).employeeBasicSalary;
-        Employee shiftEmployee = new Employee();
-        shiftEmployee.employeeId = empIndex;
-        shiftEmployee.employeeName = employeeName;
-        shiftEmployee.birthDate = birthDate;
-        shiftEmployee.employeeCommuterAllowance = empCommuterAllowance;
-        shiftEmployee.employeeBasicSalary = empBasicSalary;
-        shiftEmployee.employeeDepartment = newDepartment;
-        employeeArrayList.set(empIndex, shiftEmployee);
+        int currIndex = 0;
+        int empCurrId = s.nextInt();
+        for (int i = 0; i < employeeIds.size(); i++) {
+            if (employeeIds.contains(empCurrId)) {
+                isIn = true;
+                currIndex = employeeIds.indexOf(empCurrId);
+            } else {
+                System.out.println("No such employee in our records. Please retry");
+            }
+        }
+        if (isIn) {
+            System.out.println("Enter the employee's new department");
+            String newDepartment = s.next();
+            String employeeName = employeeArrayList.get(currIndex).employeeName;
+            String birthDate = employeeArrayList.get(currIndex).birthDate;
+            double empCommuterAllowance = employeeArrayList.get(currIndex).employeeCommuterAllowance;
+            double empBasicSalary = employeeArrayList.get(currIndex).employeeBasicSalary;
+            Employee shiftEmployee = new Employee();
+            shiftEmployee.employeeId = empCurrId;
+            shiftEmployee.employeeName = employeeName;
+            shiftEmployee.birthDate = birthDate;
+            shiftEmployee.employeeCommuterAllowance = empCommuterAllowance;
+            shiftEmployee.employeeBasicSalary = empBasicSalary;
+            shiftEmployee.employeeDepartment = newDepartment;
+            employeeArrayList.set(currIndex, shiftEmployee);
+            employeeIds.set(currIndex, empCurrId);
+        } else {
+
+        }
     }
 
-    private void promoteEmployee() {
+    protected void showEmployees() {
+        if (employeeArrayList.size() > 0) {
+            for (int i = 0; i < employeeArrayList.size(); i++) {
+                toShowString(employeeArrayList.get(i));
+            }
+        } else {
+            System.out.println("No employees");
+        }
+    }
+
+    private void toShowString(Employee employee) {
+        System.out.println(String.valueOf(employee.employeeId).concat(" ".concat(employee.employeeName)));
+    }
+
+    protected void promoteEmployee() {
         System.out.println("Enter the employee's ID whose position you want to change");
         Scanner s = new Scanner(System.in);
-        int empIndex = s.nextInt();
-        System.out.println("Enter the employee's new position");
-        String newPosition = s.next();
-        System.out.println("Enter the employee's new salary");
-        double newSalary = s.nextDouble();
-        String employeeName = employeeArrayList.get(empIndex).employeeName;
-        String birthDate = employeeArrayList.get(empIndex).birthDate;
-        String employeeDepartment = employeeArrayList.get(empIndex).employeeDepartment;
-        double empCommuterAllowance = employeeArrayList.get(empIndex).employeeCommuterAllowance;
-        Employee shiftEmployee = new Employee();
-        shiftEmployee.employeeId = empIndex;
-        shiftEmployee.employeePosition = newPosition;
-        shiftEmployee.employeeName = employeeName;
-        shiftEmployee.birthDate = birthDate;
-        shiftEmployee.employeeCommuterAllowance = empCommuterAllowance;
-        shiftEmployee.employeeBasicSalary = newSalary;
-        shiftEmployee.employeeDepartment = employeeDepartment;
-        employeeArrayList.set(empIndex, shiftEmployee);
+        int empIndex = 0;
+        int empId = s.nextInt();
+        for (int i = 0; i < employeeIds.size(); i++) {
+            if (employeeIds.contains(empId)) {
+                isIn = true;
+                empIndex = employeeIds.indexOf(empId);
+            } else {
+                System.out.println("No such employee in our records. Please retry");
+            }
+        }
+        if (isIn) {
+            System.out.println("Enter the employee's new position");
+            String newPosition = s.next();
+            System.out.println("Enter the employee's new salary");
+            double newSalary = s.nextDouble();
+            String employeeName = employeeArrayList.get(empIndex).employeeName;
+            String birthDate = employeeArrayList.get(empIndex).birthDate;
+            String employeeDepartment = employeeArrayList.get(empIndex).employeeDepartment;
+            double empCommuterAllowance = employeeArrayList.get(empIndex).employeeCommuterAllowance;
+            Employee shiftEmployee = new Employee();
+            shiftEmployee.employeeId = empId;
+            shiftEmployee.employeePosition = newPosition;
+            shiftEmployee.employeeName = employeeName;
+            shiftEmployee.birthDate = birthDate;
+            shiftEmployee.employeeCommuterAllowance = empCommuterAllowance;
+            shiftEmployee.employeeBasicSalary = newSalary;
+            shiftEmployee.employeeDepartment = employeeDepartment;
+            employeeArrayList.set(empIndex, shiftEmployee);
+            employeeIds.set(empIndex, empId);
+        }
     }
-
 }

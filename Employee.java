@@ -1,6 +1,5 @@
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.HashMap;
 
 public class Employee {
 
@@ -9,8 +8,9 @@ public class Employee {
     public int employeeId;
     public boolean isIn;
 
-    public LinkedList<Employee> employeeLinkedList = new LinkedList<>();
-    public HashMap<String, String> employeeIds = new HashMap<String, String>();
+    public ArrayList<Employee> employeeLinkedList = new ArrayList<>();
+
+    public ArrayList<Integer> employeeIds = new ArrayList<Integer>();
 
     public Employee() {
 
@@ -28,6 +28,7 @@ public class Employee {
 
     //a function to add users to the database
     public void addEmployee() {
+
         // myScanner object of class Scanner
         Scanner myScanner = new Scanner(System.in);
         //local variables
@@ -55,17 +56,18 @@ public class Employee {
         employee.employeeBasicSalary = employeeBasicSalary;
         employee.employeeCommuterAllowance = employeeCommuterAllowance;
         employeeLinkedList.add(employee);
-        employeeIds.put(String.format("%d",employee.employeeId), employee.employeeName);
+        employeeIds.add(employee.employeeId);
         System.out.println("-----Added The Following Employee-----\n ".concat(String.valueOf(employee.employeeId).concat(" ").concat(employee.employeeName).concat(" ").concat(employee.employeeDepartment)));
     }
+
     //a function to remove users from the database
-    public void removeEmployee(){
+    public void removeEmployee() {
         Scanner s = new Scanner(System.in);
         System.out.println("Enter the employee's ID who you want to remove");
         int empCurrId = s.nextInt();
         int currIndex = 0;
         for (int i = 0; i < employeeIds.size(); i++) {
-            if (employeeIds.containsKey(String.format("%d", empCurrId))) {
+            if (employeeIds.contains(empCurrId)) {
                 isIn = true;
                 currIndex = empCurrId;
             } else {
@@ -79,6 +81,7 @@ public class Employee {
 
         }
     }
+
     //Calculate an employee's gross salary
     protected void calculateSalary() {
         Scanner s = new Scanner(System.in);
@@ -89,7 +92,7 @@ public class Employee {
         for (int i = 0; i < employeeIds.size(); i++) {
             if (employeeIds.contains(empCurrId)) {
                 isIn = true;
-                currIndex = employeeIds.indexOf(empCurrId);
+                currIndex = employeeIds.get(empCurrId);
             } else {
                 System.out.println("No such employee in our records. Please retry");
             }
@@ -149,12 +152,12 @@ public class Employee {
     }
 
     private void toShowString(Employee employee) {
-        System.out.println("id: "+String.valueOf(employee.employeeId)+" "+"name: "+(employee.employeeName)+" "+"dept: "+(employee.employeeDepartment)+" \n"+"position: "+(employee.employeePosition));
+        System.out.println("id: " + String.valueOf(employee.employeeId) + " " + "name: " + (employee.employeeName) + " " + "dept: " + (employee.employeeDepartment) + " \n" + "position: " + (employee.employeePosition));
     }
 
     protected void promoteEmployee(int setPromotion) {
         int empIndex = 0;
-        if(setPromotion == 0) {
+        if (setPromotion == 0) {
             System.out.println("Enter the employee's ID whose position you want to change");
             Scanner s = new Scanner(System.in);
             int empId = s.nextInt();
@@ -185,8 +188,7 @@ public class Employee {
                 shiftEmployee.employeeDepartment = employeeDepartment;
                 employeeLinkedList.set(empIndex, shiftEmployee);
                 employeeIds.set(empIndex, empId);
-            }
-            else {
+            } else {
                 System.out.println("Enter the employee's new position");
                 String newPosition = s.next();
                 System.out.println("Enter the employee's new salary");

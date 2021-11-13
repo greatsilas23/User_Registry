@@ -1,42 +1,43 @@
 import java.util.Scanner;
-
-public class Main {
-    static Employee employee = new Employee();
-
-    public static void main(String[] args) {
-        String choice = "n";
-        int empChoice;
-        do {
-            System.out.println("What would you like to do?\n1. Add Employee\n2. Change Employee Department\n3. Promote Employee\n4. Show All Employees\n5. Calculate Salary\n6. Remove Employee\n7. Exit");
-            empChoice = new Scanner(System.in).nextInt();
-            switch (empChoice) {
+import java.util.HashMap;
+class Main {
+    public static void main(String[] args){
+        int usrChoice = 0;
+        char isExit = "n";
+        Scanner myScanner = new Scanner(System.in);
+        HashMap<Integer, String> theStudents = new HashMap<Integer, String>;
+        HashMap<Integer, String> theTeachers = new HashMap<Integer, String>;
+        myStudent newStudent = new myStudent(0, '', '', '');
+        myTeacher newTeacher = new Teacher(0, '', '', '');
+        mySchool newSchool = new mySchool(theStudents, theTeachers)
+        String welcomeText = "Welcome to myStudent";
+        while(isExit){
+            System.out.println(welcomeText);
+            System.out.println("1. Add student\n2. Add teacher\n3. View Student\n4. View Teacher\n5. Master balance\n6. Exit");
+            usrChoice = myScanner.nextInt();
+            switch(usrChoice) {
                 case 1:
-                    employee.addEmployee();
+                    newStudent.addStudent();
                     break;
                 case 2:
-                    employee.shiftDepartment();
+                    newTeacher.addTeacher();
                     break;
                 case 3:
-                    employee.promoteEmployee(0);
+                    mySchool.viewStudent();
                     break;
                 case 4:
-                    employee.showEmployees();
+                    mySchool.viewTeacher();
                     break;
                 case 5:
-                    employee.calculateSalary();
+                    mySchool.showBalanceMaster();
                     break;
                 case 6:
-                    employee.removeEmployee();
-                    break;
-                case 7:
-                    choice = "Y";
+                    isExit = "Y";
                     break;
                 default:
-                    System.out.println("Invalid Choice");
+                    System.out.println("Sorry, try again");
                     break;
             }
         }
-        while (choice.equals("n"));
     }
-
 }
